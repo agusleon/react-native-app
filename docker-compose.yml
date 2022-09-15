@@ -1,0 +1,30 @@
+version: '2.4'
+
+services:
+    dockertodo:
+        build:
+            context: .
+        tty: true
+        ports:
+            - '19006:19006'
+        volumes:
+            - ./App:/opt/dockerTodo/app:delegated
+            - ./App/package.json:/opt/dockerTodo/package.json
+            - ./App/package-lock.json:/opt/dockerTodo/package-lock.json
+            - notused:/opt/dockerTodo/app/node_modules
+        healthcheck:
+            disable: true
+    backend:
+    # will build ./app/server/Dockerfile
+        build: 
+            ./App/server/
+        ports:
+            - '8000:8000'
+        volumes:
+            - ./App/server:/usr/src/app:delegated
+            - ./App/server/package.json:/usr/src/app/package.json
+            - ./App/package-lock.json:/usr/src/app/package-lock.json
+            - notused:/usr/src/app/node_modules
+
+volumes:
+  notused:
